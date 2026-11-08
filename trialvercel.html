@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Timer</title>
+	<style>
+		body {
+			min-height: 100vh;
+			margin: 0;
+			display: grid;
+			place-items: center;
+			background: #f3f4f6;
+			color: #1f2937;
+			font-family: system-ui, sans-serif;
+		}
+		.timer {
+			text-align: center;
+			padding: 2rem;
+			border-radius: 1rem;
+			background: white;
+			box-shadow: 0 8px 24px #00000012;
+		}
+		#display { margin: 0 0 1.5rem; font-size: 4rem; font-variant-numeric: tabular-nums; }
+		button {
+			margin: 0 .25rem;
+			padding: .65rem 1rem;
+			border: 0;
+			border-radius: .5rem;
+			background: #2563eb;
+			color: white;
+			font: inherit;
+			cursor: pointer;
+		}
+		button:hover { background: #1d4ed8; }
+		#reset { background: #6b7280; }
+		#reset:hover { background: #4b5563; }
+	</style>
+</head>
+<body>
+	<main class="timer">
+		<h1 id="display" aria-live="off">00:00</h1>
+		<button id="start">Start</button>
+		<button id="reset">Reset</button>
+	</main>
+	<script>
+		const display = document.querySelector('#display');
+		const startButton = document.querySelector('#start');
+		let elapsed = 0;
+		let interval = null;
+
+		function render() {
+			const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+			const seconds = (elapsed % 60).toString().padStart(2, '0');
+			display.textContent = `${minutes}:${seconds}`;
+		}
+
+		startButton.addEventListener('click', () => {
+			if (interval) {
+				clearInterval(interval);
+				interval = null;
+				startButton.textContent = 'Start';
+			} else {
+				interval = setInterval(() => { elapsed += 1; render(); }, 1000);
+				startButton.textContent = 'Pause';
+			}
+		});
+
+		document.querySelector('#reset').addEventListener('click', () => {
+			clearInterval(interval);
+			interval = null;
+			elapsed = 0;
+			render();
+			startButton.textContent = 'Start';
+		});
+	</script>
+</body>
+</html>
